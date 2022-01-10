@@ -17,6 +17,11 @@ public class KafkaMessageStarter {
 
     @PostConstruct
     public void start() {
-        messagePublisher.sendMessage("My First Message");
+        while (true) {
+            System.out.print("Input message : ");
+            String input = MessageInserter.input();
+            messagePublisher.sendMessage(input);
+            System.out.println();
+        }
     }
 }
