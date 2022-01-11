@@ -13,7 +13,6 @@ import org.springframework.kafka.core.ProducerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-@Profile("!local")
 @Configuration
 public class KafkaProducerConfig {
     @Value(value = "${kafka.bootstrapAddress}")

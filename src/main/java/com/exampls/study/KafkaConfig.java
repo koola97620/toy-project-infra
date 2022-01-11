@@ -12,7 +12,6 @@ import org.springframework.kafka.core.KafkaAdmin;
 import java.util.HashMap;
 import java.util.Map;
 
-@Profile("!local")
 @Configuration
 public class KafkaConfig {
     @Value(value = "${kafka.bootstrapAddress}")
