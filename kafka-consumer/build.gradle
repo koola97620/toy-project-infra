@@ -5,3 +5,8 @@ bootJar {
 jar {
     enabled = true
 }
+
+//dependencies {
+// to use core project
+//    implementation project(':core')
+//}
