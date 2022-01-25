@@ -1,4 +1,5 @@
 rootProject.name = 'study'
 include 'kafka-consumer'
 include 'kafka-producer'
+include 'redis'
 
