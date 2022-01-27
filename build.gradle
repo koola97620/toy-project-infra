@@ -62,6 +62,7 @@ subprojects {
 project(':redis') {
     dependencies {
         implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+        implementation 'org.springframework.boot:spring-boot-starter-web'
         implementation 'it.ozimov:embedded-redis:0.7.2'
     }
 }
