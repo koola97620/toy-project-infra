@@ -3,13 +3,15 @@ package com.redis;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import redis.embedded.RedisCluster;
 import redis.embedded.RedisServer;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-@Profile("h2")
-@Configuration
+
+//@Profile("h2")
+//@Configuration
 public class EmbeddedRedisConfig {
 
     private RedisServer redisServer;

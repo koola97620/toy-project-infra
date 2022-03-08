@@ -34,13 +34,11 @@ subprojects {
     dependencies {
         implementation 'org.springframework.boot:spring-boot-starter-actuator'
         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-        implementation 'org.springframework.kafka:spring-kafka'
         compileOnly 'org.projectlombok:lombok'
         runtimeOnly 'com.h2database:h2'
         runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
         annotationProcessor 'org.projectlombok:lombok'
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
-        testImplementation 'org.springframework.kafka:spring-kafka-test'
         testImplementation 'org.testcontainers:junit-jupiter'
         testImplementation 'org.testcontainers:kafka'
         testImplementation 'org.testcontainers:mariadb'
@@ -59,11 +57,28 @@ subprojects {
 
 }
 
+project(':kafka-producer') {
+    dependencies {
+        implementation 'org.springframework.kafka:spring-kafka'
+        testImplementation 'org.springframework.kafka:spring-kafka-test'
+    }
+}
+
+project(':kafka-consumer') {
+    dependencies {
+        implementation 'org.springframework.kafka:spring-kafka'
+        testImplementation 'org.springframework.kafka:spring-kafka-test'
+    }
+}
+
 project(':redis') {
     dependencies {
         implementation 'org.springframework.boot:spring-boot-starter-data-redis'
         implementation 'org.springframework.boot:spring-boot-starter-web'
-        implementation 'it.ozimov:embedded-redis:0.7.2'
+        implementation ("it.ozimov:embedded-redis:0.7.3") {
+            exclude group: "org.slf4j", module: "slf4j-simple"
+        }
+
     }
 }
 
