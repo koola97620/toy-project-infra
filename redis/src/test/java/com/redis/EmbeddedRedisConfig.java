@@ -10,8 +10,8 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 
-//@Profile("h2")
-//@Configuration
+@Profile("h2")
+@Configuration
 public class EmbeddedRedisConfig {
 
     private RedisServer redisServer;
