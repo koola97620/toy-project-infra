@@ -2,10 +2,8 @@ package com.redis;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.connection.DataType;
 import org.springframework.data.redis.core.*;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
@@ -19,9 +17,7 @@ import java.util.concurrent.TimeUnit;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-@SpringBootTest
-@ActiveProfiles("h2")
-public class RedisInputTest {
+public class RedisInputTest extends IntegratedTest {
     @Autowired
     private RedisTemplate redisTemplate;
 

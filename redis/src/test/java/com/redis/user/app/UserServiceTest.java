@@ -1,23 +1,21 @@
 package com.redis.user.app;
 
+import com.redis.IntegratedTest;
 import com.redis.user.dto.CreateUserRequest;
 import com.redis.user.dto.CreateUserResponse;
-import com.redis.user.dto.GetUserResponse;
+import com.redis.user.dto.UserInfoResponse;
 import com.redis.util.DatabaseCleanup;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@ActiveProfiles("h2")
-class UserServiceTest {
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+class UserServiceTest extends IntegratedTest {
     @Autowired
     private UserService userService;
 
@@ -30,7 +28,7 @@ class UserServiceTest {
     private CreateUserResponse savedUser;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         CreateUserRequest createUserRequest =
                 CreateUserRequest.builder()
                         .name("jdragon")
@@ -42,7 +40,7 @@ class UserServiceTest {
     @DisplayName("저장된 User 조회")
     @Test
     void save() {
-        GetUserResponse dbUser = userService.getUser(savedUser.getId());
+        UserInfoResponse dbUser = userService.getUser(savedUser.getId());
         assertThat(dbUser.getId()).isEqualTo(savedUser.getId());
         assertThat(dbUser.getName()).isEqualTo(savedUser.getName());
     }
@@ -50,7 +48,7 @@ class UserServiceTest {
     @DisplayName("캐시에 저장된 User 조회")
     @Test
     void cacheSaveUser() {
-        GetUserResponse dbUser = userService.getUser(savedUser.getId());
+        UserInfoResponse dbUser = userService.getUser(savedUser.getId());
         assertThat(dbUser.getId()).isEqualTo(savedUser.getId());
         assertThat(dbUser.getName()).isEqualTo(savedUser.getName());
 
@@ -60,7 +58,7 @@ class UserServiceTest {
         assertThat(keys.size()).isEqualTo(1);
 
         ValueOperations valueOperations = redisTemplate.opsForValue();
-        GetUserResponse cacheUserResponse = (GetUserResponse) valueOperations.get("user::1");
+        UserInfoResponse cacheUserResponse = (UserInfoResponse) valueOperations.get("user::1");
 
         assertThat(cacheUserResponse.getId()).isEqualTo(savedUser.getId());
         assertThat(cacheUserResponse.getName()).isEqualTo(savedUser.getName());

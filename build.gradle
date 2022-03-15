@@ -78,7 +78,7 @@ project(':redis') {
         implementation ("it.ozimov:embedded-redis:0.7.3") {
             exclude group: "org.slf4j", module: "slf4j-simple"
         }
-
+        testImplementation 'io.rest-assured:rest-assured:3.3.0'
     }
 }
 

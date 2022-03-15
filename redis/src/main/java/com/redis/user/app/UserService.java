@@ -4,6 +4,7 @@ import com.redis.common.CacheKey;
 import com.redis.user.domain.User;
 import com.redis.user.domain.UserRepository;
 import com.redis.user.dto.*;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -22,10 +23,10 @@ public class UserService {
 
     @Cacheable(value = CacheKey.USER, key = "#id", unless = "#result == null")
     @Transactional(readOnly = true)
-    public GetUserResponse getUser(Long id) {
+    public UserInfoResponse getUser(Long id) {
         User user = repository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
-        return GetUserResponse.builder()
+        return UserInfoResponse.builder()
                 .id(user.getId())
                 .name(user.getName())
                 .age(user.getAge())
@@ -48,14 +49,20 @@ public class UserService {
 
     @CachePut(value = CacheKey.USER, key = "#id")
     @Transactional
-    public UpdateUserResponse updateUser(Long id, UpdateUserRequest request) {
+    public UserInfoResponse updateUser(Long id, UpdateUserRequest request) {
         User user = repository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
         user.update(request.getName(), request.getAge());
-        return UpdateUserResponse.builder()
+        return UserInfoResponse.builder()
                 .id(user.getId())
                 .name(user.getName())
                 .age(user.getAge())
                 .build();
+    }
+
+    @CacheEvict(value = CacheKey.USER, key = "#id")
+    @Transactional
+    public void deleteUser(Long id) {
+        repository.deleteById(id);
     }
 }

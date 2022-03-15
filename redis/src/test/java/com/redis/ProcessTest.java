@@ -10,8 +10,8 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@SpringBootTest
-@ActiveProfiles("h2")
+//@SpringBootTest
+//@ActiveProfiles("h2")
 public class ProcessTest {
 
     @Test
