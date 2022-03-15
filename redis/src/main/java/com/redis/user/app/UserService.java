@@ -3,9 +3,8 @@ package com.redis.user.app;
 import com.redis.common.CacheKey;
 import com.redis.user.domain.User;
 import com.redis.user.domain.UserRepository;
-import com.redis.user.dto.CreateUserRequest;
-import com.redis.user.dto.CreateUserResponse;
-import com.redis.user.dto.GetUserResponse;
+import com.redis.user.dto.*;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +43,19 @@ public class UserService {
                 .id(savedUser.getId())
                 .name(savedUser.getName())
                 .age(savedUser.getAge())
+                .build();
+    }
+
+    @CachePut(value = CacheKey.USER, key = "#id")
+    @Transactional
+    public UpdateUserResponse updateUser(Long id, UpdateUserRequest request) {
+        User user = repository.findById(id)
+                .orElseThrow(EntityNotFoundException::new);
+        user.update(request.getName(), request.getAge());
+        return UpdateUserResponse.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .age(user.getAge())
                 .build();
     }
 }

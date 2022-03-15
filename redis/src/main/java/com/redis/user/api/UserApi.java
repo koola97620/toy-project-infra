@@ -2,8 +2,13 @@ package com.redis.user.api;
 
 import com.redis.user.app.UserService;
 import com.redis.user.dto.CreateUserRequest;
+import com.redis.user.dto.UpdateUserRequest;
+import org.apache.coyote.Response;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @RestController
 public class UserApi {
@@ -21,6 +26,11 @@ public class UserApi {
 
     @PostMapping("/user")
     public ResponseEntity createUser(@RequestBody CreateUserRequest request) {
-        return ResponseEntity.ok(userService.createUser(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(request));
+    }
+
+    @PutMapping("/users/{userId}")
+    public ResponseEntity updateUser(@PathVariable("userId") Long userId, @RequestBody UpdateUserRequest request) {
+        return ResponseEntity.ok(userService.updateUser(userId, request));
     }
 }
