@@ -1,5 +1,6 @@
-package com.redis.common;
+package com.redis.config;
 
+import com.redis.common.CacheKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -21,32 +22,32 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Profile("!h2")
+@Profile("h2")
 @Configuration
 @EnableCaching
-public class RedisCacheConfig {
+public class H2RedisCacheConfig {
 
-    @Value("${spring.redis.cluster.nodes}")
-    private List<String> clusterNodes;
+//    @Value("${spring.redis.cluster.nodes}")
+//    private List<String> clusterNodes;
 
-//    @Bean
-//    public RedisTemplate redisTemplate() {
-//        RedisTemplate redisTemplate = new RedisTemplate();
-//        redisTemplate.setKeySerializer(new StringRedisSerializer());
-//        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
-//        redisTemplate.setConnectionFactory(redisConnectionFactory());
-//        return redisTemplate;
-//    }
+    @Bean
+    public RedisTemplate redisTemplate() {
+        RedisTemplate redisTemplate = new RedisTemplate();
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        redisTemplate.setConnectionFactory(redisConnectionFactory());
+        return redisTemplate;
+    }
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        RedisClusterConfiguration redisClusterConfiguration = new RedisClusterConfiguration(clusterNodes);
-
+//        RedisClusterConfiguration redisClusterConfiguration = new RedisClusterConfiguration();
 //        clusterNodes.forEach( node -> {
 //            String[] split = node.split(":");
 //            redisClusterConfiguration.clusterNode(split[0], Integer.parseInt(split[1]));
 //        });
-        return new LettuceConnectionFactory(redisClusterConfiguration);
+//        return new LettuceConnectionFactory(redisClusterConfiguration);
+        return new LettuceConnectionFactory();
     }
 
     @Bean(name = "cacheManager")

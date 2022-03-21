@@ -2,15 +2,13 @@ package com.redis.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import redis.embedded.RedisCluster;
-import redis.embedded.RedisExecProvider;
-import redis.embedded.RedisServer;
-import redis.embedded.RedisServerBuilder;
+import redis.embedded.*;
 import redis.embedded.util.Architecture;
 import redis.embedded.util.OS;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import java.util.Arrays;
 import java.util.List;
 
 //@Profile("h2")
@@ -21,9 +19,26 @@ public class EmbeddedRedisClusterConfig {
 
     @PostConstruct
     public void startRedisCluster() {
+        RedisServerBuilder builder = RedisServer.builder()
+                .setting("maxheap 1024M")// 윈도우에서만 설정 필요
+                .setting("heapdir \"C:\\\\redis\"");// 윈도우에서만 설정 필요
+
+        if (redisCluster == null || !redisCluster.isActive()) {
+            redisCluster = RedisCluster.builder()
+                    .withServerBuilder(builder)
+                    .serverPorts(Arrays.asList(6300,6301,6302,6400,6401,6402))
+                    .build();
+        }
+        redisCluster.start();
+        System.out.println("Redis Start");
+    }
+
+    /*
+
+    @PostConstruct
+    public void startRedisCluster() {
 //        RedisExecProvider.defaultProvider()
 //                .override(OS.WINDOWS, Architecture.x86_64, "/path/to/windows/redis64");
-
         List<Integer> group1 = List.of(42000, 52000);
         List<Integer> group2 = List.of(42001, 52001);
         List<Integer> group3 = List.of(42002, 52002);
@@ -51,6 +66,7 @@ public class EmbeddedRedisClusterConfig {
         redisCluster.start();
     }
 
+     */
     public List<Integer> getServerPorts() {
         return redisCluster.serverPorts();
     }
@@ -59,6 +75,7 @@ public class EmbeddedRedisClusterConfig {
     public void stopRedisCluster() {
         if (redisCluster != null) {
             redisCluster.stop();
+            System.out.println("Redis Stop");
         }
     }
 }
