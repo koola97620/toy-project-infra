@@ -26,6 +26,7 @@ public class UserService {
     public UserInfoResponse getUser(Long id) {
         User user = repository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
+        System.out.println("AFTER DB SELECT");
         return UserInfoResponse.builder()
                 .id(user.getId())
                 .name(user.getName())
