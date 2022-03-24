@@ -24,7 +24,7 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-@Profile("!h2")
+@Profile("local")
 @Configuration
 @EnableCaching
 public class RedisCacheConfig {
@@ -47,7 +47,7 @@ public class RedisCacheConfig {
 //                .build();
 //
 //        LettuceClientConfiguration lettuceClientConfiguration = LettuceClientConfiguration.builder()
-//                .readFrom(ReadFrom.REPLICA)
+//                .readFrom(ReadFrom.REPLICA_PREFERRED)
 //                .clientOptions(options)
 //                .build();
 //
