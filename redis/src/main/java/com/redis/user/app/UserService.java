@@ -4,6 +4,7 @@ import com.redis.common.CacheKey;
 import com.redis.user.domain.User;
 import com.redis.user.domain.UserRepository;
 import com.redis.user.dto.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 
+@Slf4j
 @Service
 public class UserService {
 
@@ -26,7 +28,7 @@ public class UserService {
     public UserInfoResponse getUser(Long id) {
         User user = repository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
-        System.out.println("AFTER DB SELECT");
+        log.debug("AFTER DB SELECT");
         return UserInfoResponse.builder()
                 .id(user.getId())
                 .name(user.getName())
@@ -53,6 +55,7 @@ public class UserService {
     public UserInfoResponse updateUser(Long id, UpdateUserRequest request) {
         User user = repository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
+        log.debug("AFTER DB SELECT");
         user.update(request.getName(), request.getAge());
         return UserInfoResponse.builder()
                 .id(user.getId())
