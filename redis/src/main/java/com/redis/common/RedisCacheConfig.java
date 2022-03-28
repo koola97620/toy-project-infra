@@ -1,9 +1,5 @@
 package com.redis.common;
 
-import io.lettuce.core.ReadFrom;
-import io.lettuce.core.TimeoutOptions;
-import io.lettuce.core.cluster.ClusterClientOptions;
-import io.lettuce.core.cluster.ClusterTopologyRefreshOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +10,6 @@ import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisClusterConfiguration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
@@ -61,8 +56,6 @@ public class RedisCacheConfig {
         );
     }
 
-//    @Value("${spring.redis.cluster.nodes}")
-//    private List<String> clusterNodes;
 
 //    @Bean
 //    public RedisTemplate redisTemplate(RedisConnectionFactory redisConnectionFactory) {
@@ -71,46 +64,6 @@ public class RedisCacheConfig {
 //        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
 //        redisTemplate.setConnectionFactory(redisConnectionFactory);
 //        return redisTemplate;
-//    }
-
-//    @Bean(destroyMethod = "shutdown")
-//    public RedisClusterClient redisClusterClient() {
-//        ClusterTopologyRefreshOptions clusterTopologyRefreshOptions = ClusterTopologyRefreshOptions.builder()
-//                .enablePeriodicRefresh()
-//                .enableAllAdaptiveRefreshTriggers()
-//                .build();
-//
-//        ClusterClientOptions options = ClusterClientOptions.builder()
-//                .pingBeforeActivateConnection(true)
-//                .validateClusterNodeMembership(false)
-//                .topologyRefreshOptions(clusterTopologyRefreshOptions)
-//                .timeoutOptions(TimeoutOptions.enabled(Duration.ofSeconds(5)))
-//                .build();
-//        List<RedisURI> redisUris = new ArrayList<>();
-//        for (String node : clusterNodes) {
-//            String[] split = node.split(":");
-//            redisUris.add(RedisURI.builder().withHost(split[0]).withPort(Integer.parseInt(split[1])).build());
-//        }
-//
-//        RedisClusterClient redisClusterClient = RedisClusterClient.create(redisUris);
-//        redisClusterClient.setOptions(options);
-//        redisClusterClient.setDefaultTimeout(Duration.ofSeconds(5));
-//        return redisClusterClient;
-//    }
-
-//    @Bean
-//    public RedisConnectionFactory redisConnectionFactory() {
-//        RedisClusterConfiguration redisClusterConfiguration = new RedisClusterConfiguration(clusterNodes);
-//
-//        Set<RedisNode> set = new HashSet<>();
-//        clusterNodes.forEach(node -> {
-//            String[] split = node.split(":");
-//            set.add(new RedisNode(split[0], Integer.parseInt(split[1])));
-//            //redisClusterConfiguration.clusterNode(split[0], Integer.parseInt(split[1]));
-//        });
-//
-//        redisClusterConfiguration.setClusterNodes(set);
-//        return new LettuceConnectionFactory(redisClusterConfiguration);
 //    }
 
     @Bean(name = "cacheManager")
