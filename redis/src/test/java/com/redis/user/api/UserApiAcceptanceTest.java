@@ -1,7 +1,11 @@
 package com.redis.user.api;
 
 import com.redis.IntegratedTest;
-import com.redis.user.dto.*;
+import com.redis.user.domain.User;
+import com.redis.user.dto.CreateUserRequest;
+import com.redis.user.dto.CreateUserResponse;
+import com.redis.user.dto.UpdateUserRequest;
+import com.redis.user.dto.UserInfoResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -67,7 +71,7 @@ class UserApiAcceptanceTest extends IntegratedTest {
         Set keys = redisTemplate.keys("user::" + createdUser.getId());
         assertThat(keys.size()).isEqualTo(1);
         ValueOperations valueOperations = redisTemplate.opsForValue();
-        UserInfoResponse cacheUserResponse = (UserInfoResponse) valueOperations.get("user::" + createdUser.getId());
+        User cacheUserResponse = (User) valueOperations.get("user::" + createdUser.getId());
         assertThat(cacheUserResponse.getId()).isEqualTo(selectResponse1.getId());
         assertThat(cacheUserResponse.getName()).isEqualTo(selectResponse1.getName());
         assertThat(cacheUserResponse.getAge()).isEqualTo(selectResponse1.getAge());
@@ -101,7 +105,7 @@ class UserApiAcceptanceTest extends IntegratedTest {
         Set redisKeys = redisTemplate.keys("user::" + updateUserResponse.getId());
         assertThat(redisKeys.size()).isEqualTo(1);
         ValueOperations valueOperations2 = redisTemplate.opsForValue();
-        UserInfoResponse cacheUserResponse2 = (UserInfoResponse) valueOperations2.get("user::" + updateUserResponse.getId());
+        User cacheUserResponse2 = (User) valueOperations2.get("user::" + updateUserResponse.getId());
         assertThat(cacheUserResponse2.getId()).isEqualTo(selectResponse2.getId());
         assertThat(cacheUserResponse2.getName()).isEqualTo(selectResponse2.getName());
         assertThat(cacheUserResponse2.getAge()).isEqualTo(selectResponse2.getAge());

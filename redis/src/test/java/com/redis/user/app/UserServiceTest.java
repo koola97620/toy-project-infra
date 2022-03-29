@@ -1,11 +1,15 @@
 package com.redis.user.app;
 
 import com.redis.IntegratedTest;
+import com.redis.user.domain.User;
 import com.redis.user.dto.CreateUserRequest;
 import com.redis.user.dto.CreateUserResponse;
 import com.redis.user.dto.UserInfoResponse;
 import com.redis.util.DatabaseCleanup;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -58,7 +62,7 @@ class UserServiceTest extends IntegratedTest {
         assertThat(keys.size()).isEqualTo(1);
 
         ValueOperations valueOperations = redisTemplate.opsForValue();
-        UserInfoResponse cacheUserResponse = (UserInfoResponse) valueOperations.get("user::1");
+        User cacheUserResponse = (User) valueOperations.get("user::1");
 
         assertThat(cacheUserResponse.getId()).isEqualTo(savedUser.getId());
         assertThat(cacheUserResponse.getName()).isEqualTo(savedUser.getName());

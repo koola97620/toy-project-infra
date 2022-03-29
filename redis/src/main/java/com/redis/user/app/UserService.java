@@ -1,33 +1,31 @@
 package com.redis.user.app;
 
-import com.redis.common.CacheKey;
 import com.redis.user.domain.User;
-import com.redis.user.domain.UserRepository;
-import com.redis.user.dto.*;
+import com.redis.user.domain.UserCommandService;
+import com.redis.user.domain.UserQueryService;
+import com.redis.user.dto.CreateUserRequest;
+import com.redis.user.dto.CreateUserResponse;
+import com.redis.user.dto.UpdateUserRequest;
+import com.redis.user.dto.UserInfoResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityNotFoundException;
 
 @Slf4j
 @Service
 public class UserService {
 
-    private final UserRepository repository;
+    private final UserQueryService userQueryService;
+    private final UserCommandService userCommandService;
 
-    public UserService(UserRepository repository) {
-        this.repository = repository;
+    public UserService(UserQueryService userQueryService, UserCommandService userCommandService) {
+        this.userQueryService = userQueryService;
+        this.userCommandService = userCommandService;
     }
 
-    @Cacheable(value = CacheKey.USER, key = "#id", unless = "#result == null")
     @Transactional(readOnly = true)
     public UserInfoResponse getUser(Long id) {
-        User user = repository.findById(id)
-                .orElseThrow(EntityNotFoundException::new);
+        User user = userQueryService.findById(id);
         log.debug("AFTER DB SELECT");
         return UserInfoResponse.builder()
                 .id(user.getId())
@@ -42,7 +40,7 @@ public class UserService {
                 .name(request.getName())
                 .age(request.getAge())
                 .build();
-        User savedUser = repository.save(user);
+        User savedUser = userCommandService.save(user);
         return CreateUserResponse.builder()
                 .id(savedUser.getId())
                 .name(savedUser.getName())
@@ -50,13 +48,9 @@ public class UserService {
                 .build();
     }
 
-    @CachePut(value = CacheKey.USER, key = "#id")
     @Transactional
     public UserInfoResponse updateUser(Long id, UpdateUserRequest request) {
-        User user = repository.findById(id)
-                .orElseThrow(EntityNotFoundException::new);
-        log.debug("AFTER DB SELECT");
-        user.update(request.getName(), request.getAge());
+        User user = userCommandService.update(id, request.getName(), request.getAge());
         return UserInfoResponse.builder()
                 .id(user.getId())
                 .name(user.getName())
@@ -64,9 +58,8 @@ public class UserService {
                 .build();
     }
 
-    @CacheEvict(value = CacheKey.USER, key = "#id")
     @Transactional
     public void deleteUser(Long id) {
-        repository.deleteById(id);
+        userCommandService.deleteById(id);
     }
 }
