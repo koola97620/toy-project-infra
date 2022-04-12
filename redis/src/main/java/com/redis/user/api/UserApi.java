@@ -16,12 +16,12 @@ public class UserApi {
         this.userService = userService;
     }
 
-    @GetMapping("/user/{userId}")
+    @GetMapping("/users/{userId}")
     public ResponseEntity getUser(@PathVariable("userId") Long id) {
         return ResponseEntity.ok(userService.getUser(id));
     }
 
-    @PostMapping("/user")
+    @PostMapping("/users")
     public ResponseEntity createUser(@RequestBody CreateUserRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(request));
     }

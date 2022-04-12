@@ -1,5 +1,6 @@
 package com.redis.user.app;
 
+import com.redis.common.CacheKey;
 import com.redis.user.domain.User;
 import com.redis.user.domain.UserCommandService;
 import com.redis.user.domain.UserQueryService;
@@ -8,6 +9,7 @@ import com.redis.user.dto.CreateUserResponse;
 import com.redis.user.dto.UpdateUserRequest;
 import com.redis.user.dto.UserInfoResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,13 +50,15 @@ public class UserService {
                 .build();
     }
 
+
     @Transactional
     public UserInfoResponse updateUser(Long id, UpdateUserRequest request) {
-        User user = userCommandService.update(id, request.getName(), request.getAge());
+        User user = userQueryService.findById(id);
+        User updatedUser = userCommandService.update(user, request.getName(), request.getAge());
         return UserInfoResponse.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .age(user.getAge())
+                .id(updatedUser.getId())
+                .name(updatedUser.getName())
+                .age(updatedUser.getAge())
                 .build();
     }
 

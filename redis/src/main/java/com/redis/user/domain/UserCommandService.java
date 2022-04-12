@@ -27,9 +27,8 @@ public class UserCommandService {
         this.userRepository.deleteById(id);
     }
 
-    @CachePut(value = CacheKey.USER, key = "#id")
-    public User update(Long id, String name, int age) {
-        User user = userQueryService.findById(id);
+    @CachePut(value = CacheKey.USER, key = "#user.id")
+    public User update(User user, String name, int age) {
         log.debug("AFTER DB SELECT");
         user.update(name, age);
         return user;

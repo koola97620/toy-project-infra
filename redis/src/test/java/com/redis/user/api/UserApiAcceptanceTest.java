@@ -53,7 +53,7 @@ class UserApiAcceptanceTest extends IntegratedTest {
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .when().post("/user")
+                .when().post("/users")
                 .then().log().all().extract();
 
         assertThat(userRegistApiResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value());
@@ -62,7 +62,7 @@ class UserApiAcceptanceTest extends IntegratedTest {
         ExtractableResponse<Response> selectUserApiResponse = RestAssured
                 .given().log().all()
                 .pathParam("userId", createdUser.getId())
-                .when().get("/user/{userId}")
+                .when().get("/users/{userId}")
                 .then().log().all()
                 .extract();
         assertThat(selectUserApiResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
@@ -96,7 +96,7 @@ class UserApiAcceptanceTest extends IntegratedTest {
         ExtractableResponse<Response> selectUserApiResponse2 = RestAssured
                 .given().log().all()
                 .pathParam("userId", updateUserResponse.getId())
-                .when().get("/user/{userId}")
+                .when().get("/users/{userId}")
                 .then().log().all()
                 .extract();
         assertThat(selectUserApiResponse2.statusCode()).isEqualTo(HttpStatus.OK.value());
