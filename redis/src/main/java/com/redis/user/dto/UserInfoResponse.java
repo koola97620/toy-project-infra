@@ -5,12 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class UserInfoResponse {
-    private Long id;
-    private String name;
-    private int age;
+public record UserInfoResponse(Long id, String name, int age) {
+    @Builder
+    public UserInfoResponse {}
 }

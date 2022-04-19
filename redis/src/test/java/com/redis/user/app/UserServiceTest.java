@@ -44,19 +44,19 @@ class UserServiceTest extends IntegratedTest {
     @DisplayName("저장된 User 조회")
     @Test
     void save() {
-        UserInfoResponse dbUser = userService.getUser(savedUser.getId());
-        assertThat(dbUser.getId()).isEqualTo(savedUser.getId());
-        assertThat(dbUser.getName()).isEqualTo(savedUser.getName());
+        UserInfoResponse dbUser = userService.getUser(savedUser.id());
+        assertThat(dbUser.id()).isEqualTo(savedUser.id());
+        assertThat(dbUser.name()).isEqualTo(savedUser.name());
     }
 
     @DisplayName("캐시에 저장된 User 조회")
     @Test
     void cacheSaveUser() {
-        UserInfoResponse dbUser = userService.getUser(savedUser.getId());
-        assertThat(dbUser.getId()).isEqualTo(savedUser.getId());
-        assertThat(dbUser.getName()).isEqualTo(savedUser.getName());
+        UserInfoResponse dbUser = userService.getUser(savedUser.id());
+        assertThat(dbUser.id()).isEqualTo(savedUser.id());
+        assertThat(dbUser.name()).isEqualTo(savedUser.name());
 
-        repetitiveCall(savedUser.getId(), 10);
+        repetitiveCall(savedUser.id(), 10);
 
         Set keys = redisTemplate.keys("user::1");
         assertThat(keys.size()).isEqualTo(1);
@@ -64,9 +64,9 @@ class UserServiceTest extends IntegratedTest {
         ValueOperations valueOperations = redisTemplate.opsForValue();
         User cacheUserResponse = (User) valueOperations.get("user::1");
 
-        assertThat(cacheUserResponse.getId()).isEqualTo(savedUser.getId());
-        assertThat(cacheUserResponse.getName()).isEqualTo(savedUser.getName());
-        assertThat(cacheUserResponse.getAge()).isEqualTo(savedUser.getAge());
+        assertThat(cacheUserResponse.getId()).isEqualTo(savedUser.id());
+        assertThat(cacheUserResponse.getName()).isEqualTo(savedUser.name());
+        assertThat(cacheUserResponse.getAge()).isEqualTo(savedUser.age());
     }
 
     @AfterEach

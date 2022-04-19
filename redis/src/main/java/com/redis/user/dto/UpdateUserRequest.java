@@ -3,9 +3,7 @@ package com.redis.user.dto;
 import lombok.Builder;
 import lombok.Getter;
 
-@Getter
-@Builder
-public class UpdateUserRequest {
-    private String name;
-    private int age;
+public record UpdateUserRequest(String name, int age) {
+    @Builder
+    public UpdateUserRequest {}
 }

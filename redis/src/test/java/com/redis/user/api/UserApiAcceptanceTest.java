@@ -61,20 +61,20 @@ class UserApiAcceptanceTest extends IntegratedTest {
 
         ExtractableResponse<Response> selectUserApiResponse = RestAssured
                 .given().log().all()
-                .pathParam("userId", createdUser.getId())
+                .pathParam("userId", createdUser.id())
                 .when().get("/users/{userId}")
                 .then().log().all()
                 .extract();
         assertThat(selectUserApiResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
         UserInfoResponse selectResponse1 = selectUserApiResponse.as(UserInfoResponse.class);
 
-        Set keys = redisTemplate.keys("user::" + createdUser.getId());
+        Set keys = redisTemplate.keys("user::" + createdUser.id());
         assertThat(keys.size()).isEqualTo(1);
         ValueOperations valueOperations = redisTemplate.opsForValue();
-        User cacheUserResponse = (User) valueOperations.get("user::" + createdUser.getId());
-        assertThat(cacheUserResponse.getId()).isEqualTo(selectResponse1.getId());
-        assertThat(cacheUserResponse.getName()).isEqualTo(selectResponse1.getName());
-        assertThat(cacheUserResponse.getAge()).isEqualTo(selectResponse1.getAge());
+        User cacheUserResponse = (User) valueOperations.get("user::" + createdUser.id());
+        assertThat(cacheUserResponse.getId()).isEqualTo(selectResponse1.id());
+        assertThat(cacheUserResponse.getName()).isEqualTo(selectResponse1.name());
+        assertThat(cacheUserResponse.getAge()).isEqualTo(selectResponse1.age());
 
         UpdateUserRequest updateRequest = UpdateUserRequest.builder()
                 .name("newJdragon")
@@ -85,7 +85,7 @@ class UserApiAcceptanceTest extends IntegratedTest {
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(updateRequest)
-                .pathParam("userId", createdUser.getId())
+                .pathParam("userId", createdUser.id())
                 .when().put("/users/{userId}")
                 .then().log().all()
                 .extract();
@@ -95,31 +95,31 @@ class UserApiAcceptanceTest extends IntegratedTest {
 
         ExtractableResponse<Response> selectUserApiResponse2 = RestAssured
                 .given().log().all()
-                .pathParam("userId", updateUserResponse.getId())
+                .pathParam("userId", updateUserResponse.id())
                 .when().get("/users/{userId}")
                 .then().log().all()
                 .extract();
         assertThat(selectUserApiResponse2.statusCode()).isEqualTo(HttpStatus.OK.value());
         UserInfoResponse selectResponse2 = selectUserApiResponse2.as(UserInfoResponse.class);
 
-        Set redisKeys = redisTemplate.keys("user::" + updateUserResponse.getId());
+        Set redisKeys = redisTemplate.keys("user::" + updateUserResponse.id());
         assertThat(redisKeys.size()).isEqualTo(1);
         ValueOperations valueOperations2 = redisTemplate.opsForValue();
-        User cacheUserResponse2 = (User) valueOperations2.get("user::" + updateUserResponse.getId());
-        assertThat(cacheUserResponse2.getId()).isEqualTo(selectResponse2.getId());
-        assertThat(cacheUserResponse2.getName()).isEqualTo(selectResponse2.getName());
-        assertThat(cacheUserResponse2.getAge()).isEqualTo(selectResponse2.getAge());
+        User cacheUserResponse2 = (User) valueOperations2.get("user::" + updateUserResponse.id());
+        assertThat(cacheUserResponse2.getId()).isEqualTo(selectResponse2.id());
+        assertThat(cacheUserResponse2.getName()).isEqualTo(selectResponse2.name());
+        assertThat(cacheUserResponse2.getAge()).isEqualTo(selectResponse2.age());
 
 
         ExtractableResponse<Response> deleteResponse = RestAssured
                 .given().log().all()
-                .pathParam("userId", createdUser.getId())
+                .pathParam("userId", createdUser.id())
                 .when().delete("/users/{userId}")
                 .then().log().all()
                 .extract();
         assertThat(deleteResponse.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
 
-        Set redisKeys3 = redisTemplate.keys("user::" + createdUser.getId());
+        Set redisKeys3 = redisTemplate.keys("user::" + createdUser.id());
         assertThat(redisKeys3.size()).isEqualTo(0);
     }
 }

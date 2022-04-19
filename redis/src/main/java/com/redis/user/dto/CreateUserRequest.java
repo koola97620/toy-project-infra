@@ -4,9 +4,7 @@ package com.redis.user.dto;
 import lombok.Builder;
 import lombok.Getter;
 
-@Getter
-@Builder
-public class CreateUserRequest {
-    private String name;
-    private int age;
+public record CreateUserRequest(String name, int age) {
+    @Builder
+    public CreateUserRequest {}
 }
