@@ -36,20 +36,19 @@ public class RedisClusterConfig {
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {
         LettuceClientConfiguration clientConfiguration = LettuceClientConfiguration.builder()
-                .readFrom(ReadFrom.REPLICA)
+                .readFrom(ReadFrom.REPLICA_PREFERRED)
                 .build();
 
         String[] splitMasterUris = masterUris.split(",");
         String[] splitSlaveUris = slaveUris.split(",");
-        RedisClusterConfiguration dd = new RedisClusterConfiguration();
-        RedisClusterConfiguration abc = new RedisClusterConfiguration();
+        RedisClusterConfiguration redisClusterConfiguration = new RedisClusterConfiguration();
         for (int i = 0; i < splitMasterUris.length; i++) {
             String[] masterHostAndPort = splitMasterUris[i].split(":");
             String[] slaveHostAndPort = splitSlaveUris[i].split(":");
-            abc.addClusterNode(RedisClusterNode.newRedisClusterNode().listeningAt(masterHostAndPort[0], Integer.parseInt(masterHostAndPort[1])).build());
-            abc.addClusterNode(RedisClusterNode.newRedisClusterNode().listeningAt(slaveHostAndPort[0], Integer.parseInt(slaveHostAndPort[1])).build());
+            redisClusterConfiguration.addClusterNode(RedisClusterNode.newRedisClusterNode().listeningAt(masterHostAndPort[0], Integer.parseInt(masterHostAndPort[1])).build());
+            redisClusterConfiguration.addClusterNode(RedisClusterNode.newRedisClusterNode().listeningAt(slaveHostAndPort[0], Integer.parseInt(slaveHostAndPort[1])).build());
         }
-        return new LettuceConnectionFactory(abc, clientConfiguration);
+        return new LettuceConnectionFactory(redisClusterConfiguration, clientConfiguration);
     }
 
     @Bean(name = "cacheManager")

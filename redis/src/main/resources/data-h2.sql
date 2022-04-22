@@ -1,0 +1,15 @@
+insert into users (name,age) values ('jdragon1',11);
+insert into users (name,age) values ('jdragon2',12);
+insert into users (name,age) values ('jdragon3',13);
+insert into users (name,age) values ('jdragon4',14);
+insert into users (name,age) values ('jdragon5',15);
+insert into users (name,age) values ('jdragon6',16);
+insert into users (name,age) values ('jdragon7',17);
+insert into users (name,age) values ('jdragon8',18);
+insert into users (name,age) values ('jdragon9',19);
+insert into users (name,age) values ('jdragon10',20);
+insert into users (name,age) values ('jdragon11',21);
+insert into users (name,age) values ('jdragon12',22);
+insert into users (name,age) values ('jdragon13',23);
+insert into users (name,age) values ('jdragon14',24);
+insert into users (name,age) values ('jdragon15',25);
