@@ -1,6 +1,9 @@
 package com.redis.common;
 
 import io.lettuce.core.ReadFrom;
+import io.lettuce.core.TimeoutOptions;
+import io.lettuce.core.cluster.ClusterClientOptions;
+import io.lettuce.core.cluster.ClusterTopologyRefreshOptions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -27,26 +30,45 @@ import java.util.Map;
 @Configuration
 public class RedisClusterConfig {
 
-    @Value("${spring.redis.cluster.master.nodes}")
-    private String masterUris;
-
-    @Value("${spring.redis.cluster.slave.nodes}")
-    private String slaveUris;
+    @Value("${spring.redis.cluster.nodes}")
+    private String nodes;
 
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {
-        LettuceClientConfiguration clientConfiguration = LettuceClientConfiguration.builder()
-                .readFrom(ReadFrom.REPLICA_PREFERRED)
+//        ClusterTopologyRefreshOptions clusterTopologyRefreshOptions = ClusterTopologyRefreshOptions.builder()
+//                .enablePeriodicRefresh(Duration.ofSeconds(20))
+//                .build();
+//
+//        ClusterClientOptions options = ClusterClientOptions.builder()
+//                .autoReconnect(false)
+//                .topologyRefreshOptions(clusterTopologyRefreshOptions)
+//                .build();
+
+
+        ClusterTopologyRefreshOptions clusterTopologyRefreshOptions = ClusterTopologyRefreshOptions.builder()
+                .enableAdaptiveRefreshTrigger(
+                        ClusterTopologyRefreshOptions.RefreshTrigger.MOVED_REDIRECT,
+                        ClusterTopologyRefreshOptions.RefreshTrigger.ASK_REDIRECT,
+                        ClusterTopologyRefreshOptions.RefreshTrigger.PERSISTENT_RECONNECTS)
+                .adaptiveRefreshTriggersTimeout(Duration.ofSeconds(30))
                 .build();
 
-        String[] splitMasterUris = masterUris.split(",");
-        String[] splitSlaveUris = slaveUris.split(",");
+        ClusterClientOptions options = ClusterClientOptions.builder()
+                .autoReconnect(true)
+                .topologyRefreshOptions(clusterTopologyRefreshOptions)
+                .build();
+
+        LettuceClientConfiguration clientConfiguration = LettuceClientConfiguration.builder()
+                .readFrom(ReadFrom.REPLICA_PREFERRED)
+                .commandTimeout(Duration.ofSeconds(8))
+                .clientOptions(options)
+                .build();
+
+        String[] nodeUris = nodes.split(",");
         RedisClusterConfiguration redisClusterConfiguration = new RedisClusterConfiguration();
-        for (int i = 0; i < splitMasterUris.length; i++) {
-            String[] masterHostAndPort = splitMasterUris[i].split(":");
-            String[] slaveHostAndPort = splitSlaveUris[i].split(":");
-            redisClusterConfiguration.addClusterNode(RedisClusterNode.newRedisClusterNode().listeningAt(masterHostAndPort[0], Integer.parseInt(masterHostAndPort[1])).build());
-            redisClusterConfiguration.addClusterNode(RedisClusterNode.newRedisClusterNode().listeningAt(slaveHostAndPort[0], Integer.parseInt(slaveHostAndPort[1])).build());
+        for (int i = 0; i < nodeUris.length; i++) {
+            String[] hostAndPort = nodeUris[i].split(":");
+            redisClusterConfiguration.addClusterNode(RedisClusterNode.newRedisClusterNode().listeningAt(hostAndPort[0], Integer.parseInt(hostAndPort[1])).build());
         }
         return new LettuceConnectionFactory(redisClusterConfiguration, clientConfiguration);
     }

@@ -30,9 +30,20 @@
 - 토픽 리스트 확인
   - ./bin/kafka-topics.sh --list --bootstrap-server 172.18.189.24:9092
 - 토픽 생성
-  - ./bin/kafka-topics.sh --create --bootstrap-server 172.18.189.24:9092 --replication-factor 1 --partitions 1 --topic 토픽명
+  - ./bin/kafka-topics.sh --create --bootstrap-server 172.18.189.24:9092 --replication-factor 1 --partitions 1 --topic 토픽이름
 - 토픽 상세보기
-  - ./bin/kafka-topics.sh --describe --bootstrap-server 172.18.189.24:9092 --topic test
+  - ./bin/kafka-topics.sh --describe --bootstrap-server 172.18.189.24:9092 --topic 토픽이름
 - 토픽 데이터 확인 
-  - ./bin/kafka-console-consumer.sh --bootstrap-server 172.18.189.24:9092 --topic test --from-beginning
+  - ./bin/kafka-console-consumer.sh --bootstrap-server 172.18.189.24:9092 --topic 토픽이름 --from-beginning
+- 컨슈머 그룹 조회
+  - ./bin/kafka-consumer-groups.sh --bootstrap-server 10.1.7.161:9092 --list
+- 컨슈머 그룹 체크
+  - ./bin/kafka-consumer-groups.sh --bootstrap-server 10.1.7.161:9092 --group 컨슈머그룹이름 --describe
+    ![image](https://user-images.githubusercontent.com/10750614/163079692-9d57f4e1-0c17-45f0-9bd0-5f4bf61d7a83.png)
+- 컨슈머 그룹 파티션 수 체크
+  - ./bin/kafka-consumer-groups.sh --bootstrap-server 10.1.7.161:9092 --group 컨슈머그룹이름 --describe -- members
 
+
+# Redis 
+
+참고 : https://jdragon.oopy.io/6e084b7f-c77c-4c80-bcda-edc499e603e7
